@@ -7,8 +7,7 @@ export default async function handler(req, res) {
 
   const openAI = new OpenAIApi(config);
 
-  const topic = 'dog ownership';
-  const keywords = 'first-time dog owner, puppy food';
+  const { topic, keywords } = req.body;
 
   const response = await openAI.createChatCompletion({
     model: 'gpt-4o-mini',
@@ -57,9 +56,17 @@ export default async function handler(req, res) {
     ],
     response_format: { type: 'json_object' },
   });
+  console.log(
+    '🚀 ~ handler ~ seoResponse:',
+    seoResponse.data.choices[0]?.message?.content
+  );
 
   const { title, metaDescription } =
-    seoResponse.data.choices[0]?.message?.content ?? {};
+    JSON.parse(seoResponse.data.choices[0]?.message?.content) ?? {};
+  console.log('🚀 ~ handler ~ metaDescription:', metaDescription);
+  console.log('🚀 ~ handler ~ title:', title);
 
-  res.status(200).json({ post: content, title, metaDescription });
+  res.status(200).json({
+    post: { content, title, metaDescription },
+  });
 }
