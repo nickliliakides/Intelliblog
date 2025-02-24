@@ -3,7 +3,6 @@ import clientPromise from '../../lib/mongodb';
 
 export default async function handler(req, res) {
   const { user } = await getSession(req, res);
-  console.log('🚀 ~ handler ~ user:', user);
   const client = await clientPromise;
   const db = client.db('IntelliBlogDB');
 

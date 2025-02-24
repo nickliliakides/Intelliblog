@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins, faSignOut } from '@fortawesome/free-solid-svg-icons';
-import Logo from './logo';
+import Logo from './Logo';
 
 const AppLayout = ({ children }) => {
   const { user } = useUser();

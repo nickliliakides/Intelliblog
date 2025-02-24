@@ -1,13 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { getLayout } from '../../utils/getLayout';
-import Markdown from 'react-markdown';
+import { useRouter } from 'next/router';
 
 const NewPost = () => {
-  const [post, setPost] = useState({});
-  console.log('🚀 ~ NewPost ~ post:', post);
   const topicRef = useRef(null);
   const keywordsRef = useRef(null);
+  const router = useRouter();
 
   const clearFields = () => {
     topicRef.current.value = '';
@@ -29,7 +28,11 @@ const NewPost = () => {
       });
 
       const json = await res.json();
-      setPost(json.post);
+
+      if (json?.postId) {
+        console.log('🚀 ~ handleSubmit ~ json:', json);
+        router.push(`/post/${json.postId}`);
+      }
     } catch (error) {
       console.log('🚀 ~ handleClick ~ json error:', error);
     }
@@ -65,13 +68,13 @@ const NewPost = () => {
           </button>
         </div>
       </form>
-      {post && (
+      {/* {post && (
         <>
           <h1>{post.title}</h1>
           <h3>{post.metaDescription}</h3>
           <Markdown>{post.content}</Markdown>
         </>
-      )}
+      )} */}
     </div>
   );
 };
