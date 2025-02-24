@@ -5,6 +5,7 @@ import Markdown from 'react-markdown';
 
 const NewPost = () => {
   const [post, setPost] = useState({});
+  console.log('🚀 ~ NewPost ~ post:', post);
   const topicRef = useRef(null);
   const keywordsRef = useRef(null);
 
@@ -34,10 +35,6 @@ const NewPost = () => {
     }
   };
 
-  console.log('🚀 ~ handleClick ~ content:', post.content);
-  console.log('🚀 ~ handleClick ~ title:', post.title);
-  console.log('🚀 ~ handleClick ~ description:', post.metaDescription);
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -62,9 +59,11 @@ const NewPost = () => {
         <button type='submit' className='btn'>
           Generate Post
         </button>
-        <button className='ml-auto' onClick={clearFields}>
-          Clear fields
-        </button>
+        <div className='w-full flex justify-end'>
+          <button className='ml-auto' onClick={clearFields}>
+            Clear fields
+          </button>
+        </div>
       </form>
       {post && (
         <>
