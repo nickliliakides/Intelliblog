@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { getLayout } from '../../utils/getLayout';
 import { useRouter } from 'next/router';
+import { getAppProps } from '../../utils/getAppProps';
 
 const NewPost = () => {
   const topicRef = useRef(null);
@@ -30,7 +31,6 @@ const NewPost = () => {
       const json = await res.json();
 
       if (json?.postId) {
-        console.log('🚀 ~ handleSubmit ~ json:', json);
         router.push(`/post/${json.postId}`);
       }
     } catch (error) {
@@ -59,34 +59,28 @@ const NewPost = () => {
             className='resize-none border border-slate-500 w-full block my-2 px-4 py-2 rounded-md'
           ></textarea>
         </div>
-        <button type='submit' className='btn'>
+        <button type='submit' className='btn mt-6 text-white'>
           Generate Post
         </button>
         <div className='w-full flex justify-end'>
-          <button className='ml-auto' onClick={clearFields}>
+          <button className='ml-auto text-red-600' onClick={clearFields}>
             Clear fields
           </button>
         </div>
       </form>
-      {/* {post && (
-        <>
-          <h1>{post.title}</h1>
-          <h3>{post.metaDescription}</h3>
-          <Markdown>{post.content}</Markdown>
-        </>
-      )} */}
     </div>
   );
 };
 
 NewPost.getLayout = getLayout;
 
-export const getServerSideProps = withPageAuthRequired(() => {
-  return {
-    props: {
-      test: 'test',
-    },
-  };
+export const getServerSideProps = withPageAuthRequired({
+  async getServerSideProps(ctx) {
+    const props = await getAppProps(ctx);
+    return {
+      props,
+    };
+  },
 });
 
 export default NewPost;

@@ -4,21 +4,9 @@ import { getAppProps } from '../utils/getAppProps';
 import { getLayout } from '../utils/getLayout';
 
 const TokenTopUp = () => {
-  const handleClick = async () => {
-    const res = await fetch(`/api/addTokens`, {
-      method: 'POST',
-    });
-
-    const json = await res.json();
-    window.location.href = json.session.url;
-  };
-
   return (
     <div>
-      <h1>Token Top Up</h1>
-      <button className='btn' onClick={handleClick}>
-        Add tokens
-      </button>
+      <h1>Thank you for your purchase!</h1>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import clientPromise from '../../lib/mongodb';
 import { getLayout } from '../../utils/getLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHashtag } from '@fortawesome/free-solid-svg-icons';
+import { getAppProps } from '../../utils/getAppProps';
 
 const Post = (props) => {
   return (
@@ -41,6 +42,7 @@ Post.getLayout = getLayout;
 
 export const getServerSideProps = withPageAuthRequired({
   async getServerSideProps(ctx) {
+    const props = await getAppProps(ctx);
     const userSession = await getSession(ctx.req, ctx.res);
     const client = await clientPromise;
     const db = client.db('IntelliBlogDB');
@@ -62,6 +64,7 @@ export const getServerSideProps = withPageAuthRequired({
         title: post.title,
         metaDescription: post.metaDescription,
         keywords: post.keywords,
+        ...props,
       },
     };
   },

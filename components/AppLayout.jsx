@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins, faSignOut } from '@fortawesome/free-solid-svg-icons';
 import Logo from './Logo';
 
-const AppLayout = ({ children }) => {
+const AppLayout = ({ children, availableTokens, posts, postId }) => {
   const { user } = useUser();
   return (
     <div className='grid grid-cols-[350px_1fr] h-screen max-h-screen'>
@@ -18,12 +18,22 @@ const AppLayout = ({ children }) => {
           </Link>
           <Link href='/token-topup' className='block mt-2 text-center'>
             <FontAwesomeIcon icon={faCoins} className='text-yellow-500' />
-            <span className='ml-2'>O tokens available</span>
+            <span className='ml-2'>{availableTokens} tokens available</span>
           </Link>
-          <div>tokens</div>
         </div>
-        <div className='flex-1 overflow-auto bg-gradient-to-b from-indigo-900 to-sky-700'>
-          list of posts
+        <div className='px-4 pt-3 flex-1 overflow-auto bg-gradient-to-b from-indigo-900 to-sky-700'>
+          <div className='text-white/50 underline'>Post History</div>
+          {posts.map((p) => (
+            <Link
+              key={p._id}
+              href={`/post/${p._id}`}
+              className={`py-1 border border-white/0 block text-ellipsis overflow-hidden whitespace-nowrap my-1 px-2 bg-white/10 cursor-pointer rounded-md ${
+                postId === p._id ? 'bg-white/20 border-white' : ''
+              }`}
+            >
+              {p.topic}
+            </Link>
+          ))}
         </div>
         <div className='bg-sky-700 flex items-center gap-2 border-t border-t-black/20 p-2'>
           {user ? (
