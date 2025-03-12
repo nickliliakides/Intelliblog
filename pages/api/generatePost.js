@@ -20,8 +20,12 @@ export default withApiAuthRequired(async function handler(req, res) {
   });
 
   const openAI = new OpenAIApi(config);
-
   const { topic, keywords } = req.body;
+
+  if (!topic || !keywords || topic.length > 255 || keywords.length > 255) {
+    res.status(422);
+    return;
+  }
 
   const response = await openAI.createChatCompletion({
     model: 'gpt-4o-mini',
