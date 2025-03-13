@@ -3,11 +3,13 @@ import { OpenAIApi, Configuration } from 'openai';
 import clientPromise from '../../lib/mongodb';
 
 export default withApiAuthRequired(async function handler(req, res) {
-  const { user } = await getSession(req, res);
+  const {
+    user: { sub },
+  } = await getSession(req, res);
   const client = await clientPromise;
   const db = client.db('IntelliBlogDB');
   const userProfile = await db.collection('users').findOne({
-    auth0Id: user.sub,
+    auth0Id: sub,
   });
 
   if (!userProfile?.availableTokens) {
@@ -82,7 +84,7 @@ export default withApiAuthRequired(async function handler(req, res) {
 
   await db.collection('users').updateOne(
     {
-      auth0Id: user.sub,
+      auth0Id: sub,
     },
     {
       $inc: {
@@ -91,15 +93,19 @@ export default withApiAuthRequired(async function handler(req, res) {
     }
   );
 
-  const postInserted = await db.collection('posts').insertOne({
-    ...post,
-    topic,
-    keywords,
-    userId: userProfile._id,
-    created: new Date(),
-  });
+  try {
+    const postInserted = await db.collection('posts').insertOne({
+      ...post,
+      topic,
+      keywords,
+      userId: userProfile._id,
+      created: new Date(),
+    });
 
-  res.status(200).json({
-    postId: postInserted.insertedId,
-  });
+    res.status(200).json({
+      postId: postInserted.insertedId,
+    });
+  } catch (error) {
+    console.log('🚀 ~ Error on saving generated post: ', error);
+  }
 });
