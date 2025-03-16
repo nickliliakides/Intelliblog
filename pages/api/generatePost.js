@@ -41,7 +41,7 @@ export default withApiAuthRequired(async function handler(req, res) {
         ---
         ${topic}
         ---
-        Targeting the following comme separated keywords delimited by triple hyphens:
+        Targeting the following comma separated keywords delimited by triple hyphens:
         ---
         ${keywords}
         ---
