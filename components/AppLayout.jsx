@@ -1,16 +1,37 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCoins, faSignOut } from '@fortawesome/free-solid-svg-icons';
 import Logo from './Logo';
+import bgImage from '../public/bg-image.jpg';
+import PostsContext from '../context/postContext';
 
-const AppLayout = ({ children, availableTokens, posts, postId }) => {
+const AppLayout = ({
+  children,
+  availableTokens,
+  posts: postsFromSSR,
+  postId,
+  createdAt,
+}) => {
   const { user } = useUser();
+  const { setPostsFromSSR, posts, getPosts, noMorePosts } =
+    useContext(PostsContext);
+
+  useEffect(() => {
+    setPostsFromSSR(postsFromSSR);
+    if (postId) {
+      const exists = postsFromSSR.find((p) => p._id === postId);
+      if (!exists) {
+        getPosts({ lastPostDate: createdAt, getNewerPosts: true });
+      }
+    }
+  }, [postsFromSSR, setPostsFromSSR, postId, getPosts, createdAt]);
+
   return (
     <div className='grid grid-cols-[350px_1fr] h-screen max-h-screen'>
-      <div className='flex flex-col text-white overflow-hidden'>
+      <div className='flex flex-col text-white overflow-hidden relative z-10'>
         <div className='bg-indigo-900 px-2'>
           <Logo />
           <Link href='/post/new' className='btn'>
@@ -34,6 +55,17 @@ const AppLayout = ({ children, availableTokens, posts, postId }) => {
               {p.topic}
             </Link>
           ))}
+          {!noMorePosts && (
+            <div
+              className='hover:underline text:sm text-slate-400 text-center cursor-pointer mt-4'
+              role='button'
+              onClick={() =>
+                getPosts({ lastPostDate: posts[posts.length - 1].created })
+              }
+            >
+              Load more posts ...
+            </div>
+          )}
         </div>
         <div className='bg-sky-700 flex items-center gap-2 border-t border-t-black/20 p-2'>
           {user ? (
@@ -59,7 +91,11 @@ const AppLayout = ({ children, availableTokens, posts, postId }) => {
           )}
         </div>
       </div>
-      <div className='h-screen overflow-auto p-8'>{children}</div>
+      <div className='h-screen overflow-auto p-8'>
+        <Image src={bgImage} alt='Hero' fill className='object-cover' />
+        <div className='absolute left-0 top-o right-0 bottom-0 w-full h-full bg-slate-50 opacity-80'></div>
+        {children}
+      </div>
     </div>
   );
 };

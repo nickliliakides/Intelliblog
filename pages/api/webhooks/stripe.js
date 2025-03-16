@@ -1,6 +1,6 @@
-import Cors from 'micro-cors';
 import stripeInit from 'stripe';
 import verifyStripe from '@webdeveducation/next-verify-stripe';
+import Cors from 'micro-cors';
 import clientPromise from '../../../lib/mongodb';
 
 const stripe = stripeInit(process.env.STRIPE_SECRET_KEY);

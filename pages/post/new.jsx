@@ -55,15 +55,15 @@ const NewPost = () => {
 
   return (
     <div className='h-full overflow-hidden'>
-      <div className='w-full h-full flex flex-col overflow-auto 0'>
+      <div className='w-full h-full flex flex-col overflow-auto'>
         {generating ? (
-          <div className='text-green-600 flex flex-col justify-center items-center h-full animate-pulse '>
+          <div className='text-green-700 flex flex-col justify-center items-center h-full animate-pulse relative z-10'>
             <FontAwesomeIcon icon={faBrain} className='text-8xl' />
             <h6>Generating...</h6>
           </div>
         ) : (
           <form
-            className='m-auto w-full max-w-sm bg-slate-100 p-4 rounded-lg shadow-xl border border-slate-200 shadow-slate-20'
+            className='m-auto w-full max-w-sm bg-slate-100 p-4 rounded-lg shadow-xl border border-slate-200 shadow-slate-20 z-10'
             onSubmit={handleSubmit}
           >
             <div>
